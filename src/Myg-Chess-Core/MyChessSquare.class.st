@@ -109,6 +109,17 @@ MyChessSquare >> down [
 	^ self + (0 @ -1)
 ]
 
+{ #category : 'as yet unclassified' }
+MyChessSquare >> downLeft [
+	^ self down ifNotNil: [ :s | s left ]
+
+]
+
+{ #category : 'as yet unclassified' }
+MyChessSquare >> downRight [
+	^ self down ifNotNil: [ :s | s right ]
+]
+
 { #category : 'asd' }
 MyChessSquare >> emptyContents [
 	
@@ -309,4 +320,17 @@ MyChessSquare >> unselect [
 MyChessSquare >> up [
 	
 	^ self + (0@1)
+]
+
+{ #category : 'as yet unclassified' }
+MyChessSquare >> upLeft [
+	^ self up ifNotNil: [ :s | s left ]
+
+]
+
+{ #category : 'as yet unclassified' }
+MyChessSquare >> upRight [
+	^ self up ifNotNil: [ :s | s right ]
+
+
 ]

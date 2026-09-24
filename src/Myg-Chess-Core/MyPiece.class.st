@@ -28,7 +28,7 @@ MyPiece class >> white [
 { #category : 'as yet unclassified' }
 MyPiece >> attackingSquares [
 
-	^ self legalTargetSquares
+	^ self targetSquaresLegal: true
 ]
 
 { #category : 'path commands' }
@@ -77,6 +77,30 @@ MyPiece >> color [
 MyPiece >> color: aColor [
 
 	color := aColor
+]
+
+{ #category : 'as yet unclassified' }
+MyPiece >> doesNotLeaveKingInCheckWhenMovedTo: aSquare [
+	| originalSquare originalContents king isInCheckAfterMove |
+	originalSquare := square.
+	originalContents := aSquare contents.
+
+	[ "Simule le coup"
+	  square emptyContents.
+	  aSquare contents: self.
+	  square := aSquare.
+
+	  "Mon roi est-il en échec après ce coup ?"
+	  king := self ownKing.
+	  isInCheckAfterMove := king
+		  ifNil: [ false ]
+		  ifNotNil: [ king isInCheck ] ]
+		ensure: [ "Annule le coup"
+			aSquare contents: originalContents.
+			originalSquare contents: self.
+			square := originalSquare ].
+
+	^ isInCheckAfterMove not
 ]
 
 { #category : 'rendering' }
@@ -155,10 +179,11 @@ MyPiece >> leftFileLegal: aBoolean [
 	^ self collectSquares: [ :aSquare | aSquare left ] legal: aBoolean
 ]
 
-{ #category : 'path commands' }
+{ #category : 'rendering' }
 MyPiece >> legalTargetSquares [
 
-	^ self targetSquaresLegal: true
+	^ (self targetSquaresLegal: true) select: [ :aSquare |
+		  self doesNotLeaveKingInCheckWhenMovedTo: aSquare ]
 ]
 
 { #category : 'path commands' }
@@ -169,6 +194,15 @@ MyPiece >> moveTo: aSquare [
 	square emptyContents.
 	square := aSquare.
 	aSquare contents: self
+]
+
+{ #category : 'as yet unclassified' }
+MyPiece >> ownKing [
+	"Le roi de ma couleur, ou nil s'il n'y en a pas sur le plateau"
+
+	^ self board pieces
+		detect: [ :p | p notNil and: [ p isKing and: [ p color = color ] ] ]
+		ifNone: [ nil ]
 ]
 
 { #category : 'rendering' }
@@ -203,7 +237,8 @@ MyPiece >> targetSquares [
 { #category : 'rendering' }
 MyPiece >> targetSquaresLegal: aBoolean [
 
-	self subclassResponsibility
+	^self subclassResponsibility select: [ :aSquare |
+		  self doesNotLeaveKingInCheckWhenMovedTo: aSquare ]
 ]
 
 { #category : 'rendering' }
