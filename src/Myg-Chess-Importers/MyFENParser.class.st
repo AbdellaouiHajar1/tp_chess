@@ -90,16 +90,9 @@ MyFENParser >> parseAnyOf: options [
 { #category : 'parsing' }
 MyFENParser >> parseCastlingAbility [
 
-	| rights |
-	self peek = $- ifTrue: [
-		stream next.
-		^ 'NO CASTLING' ].
+	self peek = $- ifTrue: [ ^ 'NO CASTLING' ].
 
-	rights := OrderedCollection new.
-	[ self peek notNil and: [ #( $k $K $q $Q ) includes: self peek ] ]
-		whileTrue: [ rights add: stream next ].
-	rights ifEmpty: [ self error: 'Expected castling rights' ].
-	^ rights
+	^ (1 to: 4) collect: [ :i | self parseAnyOf: #( $k $K $q $Q ) ]
 ]
 
 { #category : 'parsing' }
@@ -132,18 +125,16 @@ MyFENParser >> parsePiece [
 MyFENParser >> parseRank [
 
 	| rank |
+	self peek = $8 ifTrue: [
+		stream next.
+		^ (1 to: 8) collect: [ :i | 'empty' ] ].
+
 	rank := OrderedCollection new.
 	[ self peek notNil and: [ (#( $  $/ ) includes: self peek) not ] ]
 		whileTrue: [
-			self peek isDigit
-				ifTrue: [
-					| count |
-					count := stream next digitValue.
-					(count between: 1 and: 8) ifFalse: [
-						self error: 'Invalid number of empty squares' ].
-					count timesRepeat: [ rank add: 'empty' ] ]
-				ifFalse: [ rank add: self parsePiece ] ].
-	rank size = 8 ifFalse: [ self error: 'A rank must have 8 squares' ].
+			rank add: (self peek isDigit
+					 ifTrue: [ stream next ]
+					 ifFalse: [ self parsePiece ]) ].
 	^ rank
 ]
 
@@ -173,11 +164,12 @@ MyFENParser >> parseSideToMove [
 ]
 
 { #category : 'parsing' }
-MyFENParser >> parseSquare [
+MyFENParser >> parseSquare [ [
 
 	^ {
 		  (self parseAnyOf: ($a to: $h)).
-		  (self parseAnyOf: #( $3 $6 )) }
+		  (self parseAnyOf: (3 to: 6)) }
+]
 ]
 
 { #category : 'parsing' }

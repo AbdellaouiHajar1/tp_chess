@@ -14,11 +14,14 @@ MyCheckRuleTest >> boardFromFEN: aString [
 { #category : 'as yet unclassified' }
 MyCheckRuleTest >> checkRandomIllegalMoveOn: fen [
 
-	| board piece illegal before |
+	| board piece legal illegal before |
 	board := self boardFromFEN: fen.
 	piece := (board pieces select: #notNil) atRandom.
+	legal := piece legalTargetSquares.
+	
+	"cooriger prb lente requete :illegal := (board children reject: [ :s | legal includes: s ]) atRandom."
 	illegal := (board children reject: [ :s |
-		            piece legalTargetSquares includes: s ]) atRandom.
+	            piece legalTargetSquares includes: s ]) atRandom.
 	before := piece square.
 
 	piece moveTo: illegal.
@@ -101,8 +104,24 @@ MyCheckRuleTest >> testBishopMustSaveKing [
 ]
 
 { #category : 'tests' }
+MyCheckRuleTest >> testBoardWithTwoWhiteKingsDoesNotHang [
+
+	| board |
+	board := self boardFromFEN: '4K3/8/8/8/8/8/8/4K3 w - - 0 1'.
+	self assert: (board pieces select: #notNil) size equals: 2
+]
+
+{ #category : 'tests' }
+MyCheckRuleTest >> testBoardWithoutKingDoesNotHang [
+
+	| board |
+	board := self boardFromFEN: '8/8/8/8/8/8/8/8 w - - 0 1'.
+	self assert: (board pieces select: #notNil) isEmpty
+]
+
+{ #category : 'tests' }
 MyCheckRuleTest >> testFreeBishopHasAllItsMoves [
-	"Contrôle : sans tour ennemie, le fou en e2 a 9 coups"
+
 
 	| board bishop |
 	board := self boardFromFEN: '8/8/8/8/8/8/4B3/4K3 w - - 0 1'.
@@ -123,8 +142,16 @@ MyCheckRuleTest >> testIllegalMoveIsRefused [
 ]
 
 { #category : 'tests' }
+MyCheckRuleTest >> testPawnOnLastRankDoesNotHang [
+
+	| board |
+	board := self boardFromFEN: '4P3/8/8/8/8/8/8/4K3 w - - 0 1'.
+	self assert: ((board at: 'e8') contents) notNil
+]
+
+{ #category : 'tests' }
 MyCheckRuleTest >> testPinnedBishopCannotMove [
-	"Le fou protège le roi de la tour : s'il quitte la colonne e, le roi est attaqué"
+	
 
 	| board bishop |
 	board := self boardFromFEN: '4r3/8/8/8/8/8/4B3/4K3 w - - 0 1'.

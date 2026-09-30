@@ -34,11 +34,10 @@ MyPawnTest >> testPawnShouldNotCaptureForward [
 	board := MyChessBoard empty.
 	whitePawn := MyPawn white.
 	blackPawn := MyPawn black.
-	
-	"On place un pion blanc en e4 et un pion noir juste devant en e5"
+
 	board at: 'e4' put: whitePawn.
 	board at: 'e5' put: blackPawn.
 	
-	"Le pion blanc NE DOIT PAS pouvoir aller sur e5 (capture en avant interdite)"
+	
 	self deny: (whitePawn legalTargetSquares includes: (board at: 'e5')).
 ]

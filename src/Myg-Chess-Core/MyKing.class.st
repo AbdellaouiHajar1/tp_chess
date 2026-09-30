@@ -77,7 +77,7 @@ MyKing >> renderPieceOn: aSquare [
 
 { #category : 'rendering' }
 MyKing >> targetSquaresLegal: aBoolean [
-	"The king cannot move to threatened squares"
+	
 
 	| threatenedSquares |
 	threatenedSquares := self opponentPieces flatCollect: [ :e |
@@ -87,8 +87,8 @@ MyKing >> targetSquaresLegal: aBoolean [
 		  s notNil and: [
 			  (threatenedSquares includes: s) not and: [
 				  s hasPiece not or: [ 
-					"The square has an opponent piece"
+					
 					s contents color ~= color and: [ 
-						"Let's hope the piece is not defended"
+						
 						threatenedSquares includes: s  ] ] ] ] ]
 ]

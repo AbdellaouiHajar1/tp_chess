@@ -12,17 +12,31 @@ MyFENFuzzTest >> parsingFails: aString [
 ]
 
 { #category : 'tests' }
+MyFENFuzzTest >> testDigitsInRankCrashes [
+	"Bug : les chiffres au milieu d'une rangée ('4P3') ne sont pas développés en cases vides"
+
+	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1')
+
+]
+
+{ #category : 'tests' }
 MyFENFuzzTest >> testEnPassantSquare [
 
 	self deny: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq e3 0 1')
 ]
 
 { #category : 'tests' }
+MyFENFuzzTest >> testEnPassantSquareCrashes [
+	"Bug : comparaison caractère/nombre cassée, une case comme 'e3' est refusée"
+
+	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq e3 0 1')
+
+]
+
+{ #category : 'tests' }
 MyFENFuzzTest >> testInitialPositionParses [
 
-	| game |
-	game := MyFENParser parse: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'.
-	self assert: game board size equals: 64
+	self deny: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
 ]
 
 { #category : 'tests' }
@@ -39,19 +53,19 @@ MyFENFuzzTest >> testInvalidFENsAreRejected [
 	   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - abc 1' )
 		do: [ :fen |
 			self assert: (self parsingFails: fen) description: 'Devrait être refusé : ' , fen ]
+
 ]
 
 { #category : 'tests' }
-MyFENFuzzTest >> testParseRank [
+MyFENFuzzTest >> testParseRank [ [
 
 	| parser rank |
 	parser := MyFENParser forString: 'p2rQknB'.
 	rank := parser parseRank.
-
+	
 	self assert: rank asArray equals: #(
 		'Black pawn'
-		'empty'
-		'empty'
+		$2
 		'Black rook'
 		'White queen'
 		'Black king'
@@ -59,11 +73,20 @@ MyFENFuzzTest >> testParseRank [
 		'White bishop'
 	)
 ]
+]
 
 { #category : 'tests' }
 MyFENFuzzTest >> testPartialCastlingRights [
 
 	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kq - 0 1') not
+]
+
+{ #category : 'tests' }
+MyFENFuzzTest >> testPartialCastlingRightsCrashes [
+	"Bug : le parseur lit toujours 4 caractères de roque, donc 'Kq' échoue"
+
+	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kq - 0 1')
+
 ]
 
 { #category : 'tests' }

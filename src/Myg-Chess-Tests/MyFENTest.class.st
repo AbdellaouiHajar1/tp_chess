@@ -16,7 +16,7 @@ MyFENTest >> testParseBlackPawn [
 ]
 
 { #category : 'tests' }
-MyFENTest >> testParseRank [
+MyFENTest >> testParseRank [ [
 
 	| parser rank |
 	parser := MyFENParser forString: 'p2rQknB'.
@@ -31,6 +31,7 @@ MyFENTest >> testParseRank [
 		'Black knight'
 		'White bishop'
 	)
+]
 ]
 
 { #category : 'tests' }
