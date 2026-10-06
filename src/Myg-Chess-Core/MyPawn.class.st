@@ -7,25 +7,26 @@ Class {
 
 { #category : 'as yet unclassified' }
 MyPawn >> blackCaptureSquares [
+
 	| squares |
 	squares := OrderedCollection new.
 	{ square downLeft . square downRight } do: [ :s |
-		(s notNil and: [ s hasPiece and: [ s contents color ~= color ] ])
+		(s hasPiece and: [ s contents color ~= color ])
 			ifTrue: [ squares add: s ] ].
 	^ squares
 ]
 
 { #category : 'as yet unclassified' }
 MyPawn >> blackForwardSquares [
+
 	| squares oneStep twoSteps |
 	squares := OrderedCollection new.
 	oneStep := square down.
-	(oneStep notNil and: [ oneStep hasPiece not ]) ifTrue: [
+	oneStep hasPiece ifFalse: [
 		squares add: oneStep.
 		square file = $7 ifTrue: [
 			twoSteps := oneStep down.
-			(twoSteps notNil and: [ twoSteps hasPiece not ])
-				ifTrue: [ squares add: twoSteps ] ] ].
+			twoSteps hasPiece ifFalse: [ squares add: twoSteps ] ] ].
 	^ squares
 ]
 
@@ -66,24 +67,25 @@ MyPawn >> targetSquaresLegal: aBoolean [
 
 { #category : 'as yet unclassified' }
 MyPawn >> whiteCaptureSquares [
+
 	| squares |
 	squares := OrderedCollection new.
 	{ square upLeft . square upRight } do: [ :s |
-		(s notNil and: [ s hasPiece and: [ s contents color ~= color ] ])
+		(s hasPiece and: [ s contents color ~= color ])
 			ifTrue: [ squares add: s ] ].
 	^ squares
 ]
 
 { #category : 'as yet unclassified' }
 MyPawn >> whiteForwardSquares [
+
 	| squares oneStep twoSteps |
 	squares := OrderedCollection new.
 	oneStep := square up.
-	(oneStep notNil and: [ oneStep hasPiece not ]) ifTrue: [
+	oneStep hasPiece ifFalse: [
 		squares add: oneStep.
 		square file = $2 ifTrue: [
 			twoSteps := oneStep up.
-			(twoSteps notNil and: [ twoSteps hasPiece not ])
-				ifTrue: [ squares add: twoSteps ] ] ].
+			twoSteps hasPiece ifFalse: [ squares add: twoSteps ] ] ].
 	^ squares
 ]

@@ -120,6 +120,14 @@ MyCheckRuleTest >> testBoardWithoutKingDoesNotHang [
 ]
 
 { #category : 'tests' }
+MyCheckRuleTest >> testEmptySquareHasNoPiece [
+
+	| board |
+	board := self boardFromFEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'.
+	self deny: (board at: 'e4') hasPiece
+]
+
+{ #category : 'tests' }
 MyCheckRuleTest >> testFreeBishopHasAllItsMoves [
 
 
@@ -169,4 +177,12 @@ MyCheckRuleTest >> testRandomLegalMovesKeepInvariants [
 			on: Error
 			do: [ :e |
 				self fail: 'Erreur "' , e messageText printString , '" sur : ' , fen ] ]
+]
+
+{ #category : 'tests' }
+MyCheckRuleTest >> testRookInCornerCannotGoFurtherLeft [
+
+	| board |
+	board := self boardFromFEN: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'.
+	self deny: (board at: 'a1') left hasPiece
 ]

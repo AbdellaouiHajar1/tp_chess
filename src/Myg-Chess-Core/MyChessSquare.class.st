@@ -42,7 +42,7 @@ MyChessSquare >> + aPoint [
 	column := (self column asciiValue + aPoint x) asCharacter asString.
 	file := (self file asciiValue + aPoint y) asCharacter asString.
 
-	^ board at: column , file ifAbsent: [ ^ nil ]
+	^ board at: column , file ifAbsent: [ MyOffBoardSquare new ]
 ]
 
 { #category : 'accessing' }
@@ -88,16 +88,8 @@ MyChessSquare >> contents [
 { #category : 'accessing' }
 MyChessSquare >> contents: aPiece [
 
-	| text |
 	contents := aPiece.
-
-	text := contents
-		        ifNil: [
-			        color isBlack
-				        ifFalse: [ 'z' ]
-				        ifTrue: [ 'x' ] ]
-		        ifNotNil: [ contents renderPieceOn: self ].
-	piece text: (text asRopedText
+	piece text: ((contents renderPieceOn: self) asRopedText
 			 fontSize: 48;
 			 foreground: self foreground;
 			 fontName: MyOpenChessDownloadedFont new familyName)
@@ -111,19 +103,19 @@ MyChessSquare >> down [
 
 { #category : 'as yet unclassified' }
 MyChessSquare >> downLeft [
-	^ self down ifNotNil: [ :s | s left ]
+	^ self down left 
 
 ]
 
 { #category : 'as yet unclassified' }
 MyChessSquare >> downRight [
-	^ self down ifNotNil: [ :s | s right ]
+	^ self down right 
 ]
 
 { #category : 'asd' }
 MyChessSquare >> emptyContents [
-	
-	self contents: nil
+
+	self contents: MyNullPiece new
 ]
 
 { #category : 'accessing' }
@@ -142,8 +134,8 @@ MyChessSquare >> foreground [
 
 { #category : 'testing' }
 MyChessSquare >> hasPiece [
-	
-	^ contents isNil not
+
+	^ contents hasPiece
 ]
 
 { #category : 'highlighting' }
@@ -179,6 +171,12 @@ MyChessSquare >> initialize [
 		geometry: BlSquareGeometry new.
 
 	self addEventHandlerOn: BlClickEvent do: [ :e | self click ]
+]
+
+{ #category : 'testing' }
+MyChessSquare >> isOnBoard [
+
+	^ true
 ]
 
 { #category : 'accessing' }
@@ -265,6 +263,14 @@ MyChessSquare >> renderPawn: aPiece [
 ]
 
 { #category : 'rendering' }
+MyChessSquare >> renderPieceOn: aSquare [
+
+	^ aSquare color isBlack
+		  ifFalse: [ 'z' ]
+		  ifTrue: [ 'x' ]
+]
+
+{ #category : 'rendering' }
 MyChessSquare >> renderQueen: aPiece [
 
 	^ aPiece isWhite
@@ -324,13 +330,13 @@ MyChessSquare >> up [
 
 { #category : 'as yet unclassified' }
 MyChessSquare >> upLeft [
-	^ self up ifNotNil: [ :s | s left ]
+	^ self up left
 
 ]
 
 { #category : 'as yet unclassified' }
 MyChessSquare >> upRight [
-	^ self up ifNotNil: [ :s | s right ]
+	^ self up right 
 
 
 ]
