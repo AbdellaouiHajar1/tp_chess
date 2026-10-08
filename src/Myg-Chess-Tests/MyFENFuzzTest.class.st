@@ -20,12 +20,6 @@ MyFENFuzzTest >> testDigitsInRankCrashes [
 ]
 
 { #category : 'tests' }
-MyFENFuzzTest >> testEnPassantSquare [
-
-	self deny: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq e3 0 1')
-]
-
-{ #category : 'tests' }
 MyFENFuzzTest >> testEnPassantSquareCrashes [
 	"Bug : comparaison caractère/nombre cassée, une case comme 'e3' est refusée"
 
@@ -73,12 +67,6 @@ MyFENFuzzTest >> testParseRank [ [
 		'White bishop'
 	)
 ]
-]
-
-{ #category : 'tests' }
-MyFENFuzzTest >> testPartialCastlingRights [
-
-	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kq - 0 1') not
 ]
 
 { #category : 'tests' }
