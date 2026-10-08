@@ -13,7 +13,7 @@ MyFENFuzzTest >> parsingFails: aString [
 
 { #category : 'tests' }
 MyFENFuzzTest >> testDigitsInRankCrashes [
-	"Bug : les chiffres au milieu d'une rangée ('4P3') ne sont pas développés en cases vides"
+
 
 	self assert: (self parsingFails: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1')
 
